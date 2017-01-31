@@ -83,6 +83,8 @@ public class controls : MonoBehaviour {
 
 
 			if (!moveTankA && !moveTankB) {
+				tank_script script = (tank_script)tank_a1.GetComponent (typeof(tank_script));
+				script.fire ();
 				// reset things
 				currentTank = null;
 
@@ -97,7 +99,7 @@ public class controls : MonoBehaviour {
 		// check x
 		if (tankPos.x > (destination.x - 0.1) && tankPos.x < (destination.x + 0.1))
 			//check y
-			if (tankPos.y > (destination.y - 0.1) && tankPos.y < (destination.y + 0.1))
+			if (tankPos.z > (destination.z - 0.1) && tankPos.z < (destination.z + 0.1))
 			result = false;
 
 		return result;

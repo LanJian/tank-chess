@@ -15,9 +15,7 @@ public class wall_script : MonoBehaviour {
 	}
 
 	void OnCollisionEnter (Collision col) {
-		print ("jfkdsla");
 		if (col.gameObject.tag == "tank") {
-			
 			Destroy (gameObject);
 		}
 	}
