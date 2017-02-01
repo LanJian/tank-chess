@@ -4,23 +4,48 @@ using UnityEngine;
 
 public class shell_script : MonoBehaviour {
 
-	public GameObject target;
+	private GameObject target;
 	private Vector3 origin;
 	// Use this for initialization
 	void Start () {
-		print (target.name);
 		origin = transform.position;
+
+		// get target
+		RaycastHit hit;
+		Physics.Raycast (transform.position, transform.forward, out hit);
+		if (hit.collider != null) {
+			target = hit.collider.gameObject;
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		print (transform.position);
+		// if too far away kill the bullet
+		if (Vector3.Distance (transform.position, origin) > 16) {
+			if (gameObject != null) {
+				Destroy (gameObject);
+				return;
+			}
+		}
+			
+		if (target == null) {
+			// get new target if original target is gone
+			RaycastHit hit;
+			Physics.Raycast (transform.position, transform.forward, out hit);
+			if (hit.collider != null) {
+				target = hit.collider.gameObject;
+			}
+		}
+
 		transform.position += transform.forward * 0.5F;
-		print (Vector3.Distance (transform.position, origin));
-		print (Vector3.Distance (target.transform.position, origin));
+
+		// if we didnt get a target, just return and let the bullet die of natural causes
+		if (target == null) {
+			return;
+		}
+
 		if (target != null) {
 			if (Vector3.Distance (transform.position, origin) > Vector3.Distance (target.transform.position, origin)) {
-				print ("abcdefg");
 				// collision: kill everything !!! muhahahahaha
 				Destroy (target);
 				Destroy (gameObject);

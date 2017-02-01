@@ -3,56 +3,63 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class controls : MonoBehaviour {
-	bool moveTankA = false;
-	bool moveTankB = false;
-
-	private GameObject currentTank;
 	public GameObject tank_a1;
 	public GameObject tank_a2;
+	public GameObject tank_b1;
+	public GameObject tank_b2;
 
-	public int gamePhase = 0; // 0 for planning and 1 for movement
+	private int gamePhase; // 0 for planning and 1 for movement
 
-	public Vector3 currentDestination;
-	public Vector3 destination_a1;
-	public Vector3 destination_a2;
+	public Vector3 destination;
 
-	public float angleBetween = 0.0F;
-	public Transform target;
+	tank_script tank_a1_script;
+	tank_script tank_a2_script;
+	tank_script tank_b1_script;
+	tank_script tank_b2_script;
+	tank_script current_tank_script;
 
 	// Use this for initialization
 	void Start () {
+		// do things
+		gamePhase = 0;
+		tank_a1_script = (tank_script)tank_a1.GetComponent (typeof(tank_script));
+		tank_a2_script = (tank_script)tank_a2.GetComponent (typeof(tank_script));
+		tank_b1_script = (tank_script)tank_b1.GetComponent (typeof(tank_script));
+		tank_b2_script = (tank_script)tank_b2.GetComponent (typeof(tank_script));
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		// game phase 0, the phase to collect commands
 		if(gamePhase == 0){
+			print ("player 1 input");
 			if (Input.GetKeyDown("1")) {
-				currentTank = tank_a1;
+				current_tank_script = tank_a1_script;
 			}
 			if (Input.GetKeyDown("2")) {
-				currentTank = tank_a2;
+				current_tank_script = tank_a2_script;
+			}
+			if (Input.GetKeyDown("f")) {
+				if (current_tank_script != null) {
+					if (current_tank_script.actions.Count < 6) {
+						current_tank_script.actions.Enqueue ("fire");
+						current_tank_script.actions.Enqueue ("dummy");
+					}
+				}
 			}
 			if (Input.GetMouseButtonDown(0)) {
 
-				var plane = new Plane(Vector3.up, transform.position);
-				var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-				float distance;
-				if (plane.Raycast(ray, out distance)){
-					// some point of the plane was hit - get its coordinates
-					currentDestination = ray.GetPoint(distance);
-
-					// get angle to turn
-					if (currentTank != null){
-						if (currentTank.name == "tank_a1") {
-							moveTankA = true;
-							destination_a1 = currentDestination;
-							destination_a1.y = 0.5F;
-
-						}
-						if (currentTank.name == "tank_a2") {
-							moveTankB = true;
-							destination_a2 = currentDestination;
-							destination_a2.y = 0.5F;
+				if (current_tank_script != null) {
+					var plane = new Plane (Vector3.up, transform.position);
+					var ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+					float distance;
+					if (plane.Raycast (ray, out distance)) {
+						// some point of the plane was hit - get its coordinates
+						destination = ray.GetPoint (distance);
+						destination.y = 0.5F;
+						if (current_tank_script.actions.Count < 6) {
+							current_tank_script.actions.Enqueue ("move");
+							current_tank_script.actions.Enqueue (destination);
 						}
 					}
 				}
@@ -63,45 +70,58 @@ public class controls : MonoBehaviour {
 		}
 
 		if (gamePhase == 1) {
-			// do things
-			if (moveTankA) {
-				if (shouldTankMove(tank_a1.transform.position,destination_a1)) {
-					tank_a1.transform.LookAt (destination_a1);
-					tank_a1.transform.position += (tank_a1.transform.forward * 0.1F);
-				} else {
-					moveTankA = false;
+			print ("Player 2 input");
+			if (Input.GetKeyDown("1")) {
+				current_tank_script = tank_b1_script;
+			}
+			if (Input.GetKeyDown("2")) {
+				current_tank_script = tank_b2_script;
+			}
+			if (Input.GetKeyDown("f")) {
+				if (current_tank_script != null) {
+					if (current_tank_script.actions.Count < 6) {
+						current_tank_script.actions.Enqueue ("fire");
+						current_tank_script.actions.Enqueue ("dummy");
+					}
 				}
 			}
-			if (moveTankB) {
-				if (shouldTankMove(tank_a2.transform.position, destination_a2)) {
-					tank_a2.transform.LookAt (destination_a2);
-					tank_a2.transform.position += (tank_a2.transform.forward * 0.1F);
-				} else {
-					moveTankB = false;
+			if (Input.GetMouseButtonDown(0)) {
+
+				if (current_tank_script != null) {
+					var plane = new Plane (Vector3.up, transform.position);
+					var ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+					float distance;
+					if (plane.Raycast (ray, out distance)) {
+						// some point of the plane was hit - get its coordinates
+						destination = ray.GetPoint (distance);
+						destination.y = 0.5F;
+						if (current_tank_script.actions.Count < 6) {
+							current_tank_script.actions.Enqueue ("move");
+							current_tank_script.actions.Enqueue (destination);
+						}
+					}
 				}
 			}
-
-
-			if (!moveTankA && !moveTankB) {
-				tank_script script = (tank_script)tank_a1.GetComponent (typeof(tank_script));
-				script.fire ();
-				// reset things
-				currentTank = null;
-
-				// go to phase 0
-				gamePhase = 0;
+			if (Input.GetKeyDown ("return")) {
+				gamePhase = 2;
 			}
 		}
-	}
 
-	bool shouldTankMove(Vector3 tankPos, Vector3 destination){
-		bool result = true;
-		// check x
-		if (tankPos.x > (destination.x - 0.1) && tankPos.x < (destination.x + 0.1))
-			//check y
-			if (tankPos.z > (destination.z - 0.1) && tankPos.z < (destination.z + 0.1))
-			result = false;
+		// game phase 1, the pahse to call execute for the commands
+		if (gamePhase == 2) {
+			tank_a1_script.doActions ();
+			tank_a2_script.doActions ();
+			tank_b1_script.doActions ();
+			tank_b2_script.doActions ();
+			gamePhase = 3;
+		}
 
-		return result;
+		// game phase 2, the phase where we wait for the tanks to stop doing things
+		if(gamePhase == 3){
+			if (!tank_a1_script.isActive && !tank_a2_script.isActive && !tank_b1_script.isActive && !tank_b2_script.isActive) {
+				gamePhase = 0;
+				current_tank_script = null;
+			}
+		}
 	}
 }
