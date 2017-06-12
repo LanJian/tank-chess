@@ -2,7 +2,11 @@
 
 Two players play against each other to try to destroy the opponent's tanks.
 
-During the command phase, players issue commands to their tanks. In the execution phase, the tanks execute the commands simultaneously. The tanks have armor(blue cubes), a turret(yellow cube), and an engine(red cube). If the engine is destroyed, the tank cannot move; If the turret is destroyed, the tank cannot shoot. The first player to completely destroy the opponent's tanks wins. 
+* During the command phase, players issue commands to their tanks.
+* In the execution phase, the tanks execute the commands simultaneously.
+* The tanks have armor(blue cubes), a turret(yellow cube), and an engine(red cube).
+* If the engine is destroyed, the tank cannot move; If the turret is destroyed, the tank cannot shoot.
+* The first player to completely destroy the opponent's tanks wins. 
 
 ## How to Play
 
@@ -18,5 +22,5 @@ Player 2:
 
 ## Screenshots
 
-i![Screenshot](/screenshots/1.png)
-i![Screenshot](/screenshots/2.png)
+![Screenshot](/screenshots/1.png)
+![Screenshot](/screenshots/2.png)
