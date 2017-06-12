@@ -1,5 +1,7 @@
 # Tank Chess
 
+https://lanjian.github.io/tank-chess/
+
 Two players play against each other to try to destroy the opponent's tanks.
 
 * During the command phase, players issue commands to their tanks.
