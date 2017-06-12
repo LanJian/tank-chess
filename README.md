@@ -24,5 +24,5 @@ Player 2:
 
 ## Screenshots
 
-![Screenshot](/screenshots/1.png)
-![Screenshot](/screenshots/2.png)
+<a href="https://github.com/LanJian/tank-chess/raw/master/screenshots/1.png"><img src="https://github.com/LanJian/tank-chess/raw/master/screenshots/1.png" width="440" alt="Screenshot 1"></a>
+<a href="https://github.com/LanJian/tank-chess/raw/master/screenshots/2.png"><img src="https://github.com/LanJian/tank-chess/raw/master/screenshots/2.png" width="440" alt="Screenshot 2"></a>
